@@ -108,3 +108,21 @@ exports.getProductReviews = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getFlaggedReviews = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    
+    const flaggedReviews = await FlaggedReview.find({ product: productId })
+      .populate("user", "username email") // Fetch user details
+      .populate("product", "name description price"); // Fetch product details
+    if (!flaggedReviews.length) {
+      return res.status(404).json({ msg: "No flagged reviews found." });
+    }
+
+    res.json(flaggedReviews);
+  } catch (err) {
+    console.error("Error fetching flagged reviews:", err.message);
+    res.status(500).send("Server error");
+  }
+};
