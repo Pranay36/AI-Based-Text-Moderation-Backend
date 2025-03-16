@@ -9,7 +9,12 @@ const app = express();
 
 // Middleware for parsing JSON
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 
 // Connect to MongoDB
 connectDB();
@@ -18,5 +23,6 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const port = process.env.PORT || 5000;
+app.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
+
